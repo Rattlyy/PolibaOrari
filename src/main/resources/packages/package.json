@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "text-encoding": "^0.7.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
+    "web-streams-polyfill": "^4.0.0"
+  }
+}
