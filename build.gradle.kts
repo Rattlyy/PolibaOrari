@@ -19,7 +19,7 @@ dependencies {
     implementation(kotlin("reflect"))
 
     listOf("polyglot", "js").forEach {
-        implementation("org.graalvm.polyglot:$it:24.1.1")
+        implementation("org.graalvm.polyglot:$it:24.1.2")
     }
 
 //    listOf("javet", "javet-node-linux-x86_64").forEach {
@@ -63,25 +63,20 @@ jib {
                 }
 
                 path {
-                    setFrom("src/main/javascript/dist-server")
-                    into = "/web"
-                }
-
-                path {
                     setFrom("src/main/resources/packages/node_modules/")
                     into = "/web/node_modules"
                 }
 
                 path {
                     setFrom("src/main/resources/static")
-                    into = "/web/client"
+                    into = "/web/client/assets"
                 }
             }
         }
     }
 
     to {
-        image = "ghcr.io/${env.REGISTRY_USERNAME.value.lowercase()}/${project.name}:latest"
+        image = "ghcr.io/${env.REGISTRY_USERNAME.value.lowercase()}/${project.name.lowercase()}:latest"
         auth {
             username = env.REGISTRY_USERNAME.value
             password = env.REGISTRY_PASSWORD.value
@@ -91,6 +86,7 @@ jib {
     container {
         mainClass = "it.rattly.MainKt"
         jvmFlags = listOf("-Xss2m", "-XX:MaxRAMPercentage=80", "-XX:+ExitOnOutOfMemoryError")
+        labels = mapOf("org.opencontainers.image.source" to "https://github.com/${env.REGISTRY_USERNAME}/${project.name}")
     }
 }
 

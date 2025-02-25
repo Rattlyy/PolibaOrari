@@ -124,6 +124,14 @@ class StreamHelper(val req: HttpExchange) {
     var stream: OutputStream? = null
     fun stream() = stream
 
+    fun write(int: Int) {
+        stream?.write(int)
+    }
+
+    fun write(intArray: IntArray) {
+        stream?.write(intArray.map { it.toByte() }.toByteArray())
+    }
+
     fun startResponse(statusCode: String) {
         stream = req.startResponse(if (statusCode == "success") StatusCode.OK else StatusCode.InternalServerError)
     }

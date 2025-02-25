@@ -2,7 +2,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 
-rootProject.name = "calendario-poliba"
+rootProject.name = "PolibaOrari"
 
 sourceControl {
     gitRepository(java.net.URI("https://github.com/codeborne/klite.git")) {
