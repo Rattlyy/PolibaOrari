@@ -1,10 +1,6 @@
 package it.rattly
 
-import klite.BadRequestException
-import klite.Config
-import klite.Server
-import klite.XForwardedHttpExchange
-import klite.XRequestIdGenerator
+import klite.*
 import klite.jackson.JsonBody
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -13,12 +9,27 @@ import java.time.Duration
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.ForkJoinWorkerThread
 import kotlin.reflect.full.primaryConstructor
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun main() = Server(
     requestIdGenerator = XRequestIdGenerator(),
-    httpExchangeCreator = XForwardedHttpExchange::class.primaryConstructor!!
+    httpExchangeCreator = XForwardedHttpExchange::class.primaryConstructor!!,
+    workerPool = ForkJoinPool(
+        Runtime.getRuntime().availableProcessors(),
+        ForkJoinPool.ForkJoinWorkerThreadFactory {
+            object : ForkJoinWorkerThread(it) {
+                override fun onStart() {
+                    println("Adding ctx to $id")
+                    threadCtxMap[id] = ctx()
+                }
+            }
+        },
+        null,
+        false
+    )
 ).apply {
     Config.useEnvFile()
     ssr()
@@ -36,7 +47,8 @@ fun main() = Server(
                 val parsedOrarioFine =
                     DateTimeFormatter.ISO_DATE_TIME.parse(it.orarioFine ?: return@mapNotNull null)
                 val parsedWeekDay =
-                    DateTimeFormatter.ISO_DATE_TIME.parse(it.dataInizio ?: return@mapNotNull null).get(ChronoField.DAY_OF_WEEK)
+                    DateTimeFormatter.ISO_DATE_TIME.parse(it.dataInizio ?: return@mapNotNull null)
+                        .get(ChronoField.DAY_OF_WEEK)
 
                 val durata = Duration.between(Instant.from(parsedOrarioInizio), Instant.from(parsedOrarioFine))
 
@@ -46,16 +58,17 @@ fun main() = Server(
                     minuteInizio = parsedOrarioInizio.get(ChronoField.MINUTE_OF_HOUR),
                     orarioFine = parsedOrarioFine.get(ChronoField.HOUR_OF_DAY),
                     minuteFine = parsedOrarioFine.get(ChronoField.MINUTE_OF_HOUR),
+
                     durata = "${durata.toHours()}h ${durata.toMinutesPart()}m",
-                    durataOre = durata.toHoursPart(),
+                    durataOre = (durata.toMinutes() / 50).toInt(),
                     weekDay = parsedWeekDay,
-                    professore =
-                        it.risorse
-                            ?.filter { it?.docente != null }
-                            ?.joinToString { "${it?.docente?.nome} ${it?.docente?.cognome}" } ?: "",
+
                     materia = it.nome ?: "",
                     annoCorso = it.annoCorso?.toInt() ?: 1,
-                    aula = it.risorse?.firstOrNull { it?.aula != null }?.aula?.descrizione ?: ""
+                    aula = it.risorse?.firstOrNull { it?.aula != null }?.aula?.descrizione ?: "",
+                    professore = it.risorse
+                        ?.filter { it?.docente != null }
+                        ?.joinToString { "${it?.docente?.nome} ${it?.docente?.cognome}" } ?: "",
                 )
             }
         }
@@ -100,5 +113,5 @@ data class Lezione(
     val materia: String,
     val annoCorso: Int,
 
-    val aula: String
+    val aula: String,
 )
