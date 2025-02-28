@@ -9,27 +9,12 @@ import java.time.Duration
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
-import java.util.concurrent.ForkJoinPool
-import java.util.concurrent.ForkJoinWorkerThread
 import kotlin.reflect.full.primaryConstructor
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun main() = Server(
     requestIdGenerator = XRequestIdGenerator(),
     httpExchangeCreator = XForwardedHttpExchange::class.primaryConstructor!!,
-    workerPool = ForkJoinPool(
-        Runtime.getRuntime().availableProcessors(),
-        ForkJoinPool.ForkJoinWorkerThreadFactory {
-            object : ForkJoinWorkerThread(it) {
-                override fun onStart() {
-                    println("Adding ctx to $id")
-                    threadCtxMap[id] = ctx()
-                }
-            }
-        },
-        null,
-        false
-    )
 ).apply {
     Config.useEnvFile()
     ssr()

@@ -13,46 +13,43 @@ import java.io.OutputStream
 import java.nio.file.Path
 import kotlin.system.measureTimeMillis
 
-val threadCtxMap: MutableMap<Long, Context> = mutableMapOf()
-
-fun ctx(): Context = Context.newBuilder()
-    .option("js.esm-eval-returns-exports", "true")
-    .option("js.commonjs-require", "true")
-    .option(
-        "js.commonjs-require-cwd",
-        Path.of("${if (Config.isDev) "src/main/resources/packages/" else "/web/"}node_modules").toAbsolutePath()
-            .toString()
-    )
-    .option("js.unhandled-rejections", "throw")
-    .allowAllAccess(true).build().apply {
-        eval("js", polyfills)
-        eval(
-            "js",
-            File(
-                if (Config.isDev) "./src/main/javascript/dist/server/entry-server.js"
-                else "/web/server/entry-server.js"
-            ).readText().replace(Regex("""export\s*\{\s*(\w+,\s*)*(\w+)\s*};"""), "")
-        )
-    }
-
 fun Server.ssr() {
     val indexJSBundle =
         File(if (Config.isDev) "src/main/javascript/dist/client/assets" else "/web/client/assets").list()
             .first { it.startsWith("index") && it.endsWith("js") }
 
+    val ctx: Context = Context.newBuilder()
+        .option("js.esm-eval-returns-exports", "true")
+        .option("js.commonjs-require", "true")
+        .option(
+            "js.commonjs-require-cwd",
+            Path.of("${if (Config.isDev) "src/main/resources/packages/" else "/web/"}node_modules").toAbsolutePath()
+                .toString()
+        )
+        .option("js.unhandled-rejections", "throw")
+        .allowAllAccess(true).build().apply {
+            eval("js", polyfills)
+            eval(
+                "js",
+                File(
+                    if (Config.isDev) "./src/main/javascript/dist/server/entry-server.js"
+                    else "/web/server/entry-server.js"
+                ).readText().replace(Regex("""export\s*\{\s*(\w+,\s*)*(\w+)\s*};"""), "")
+            )
+        }
+
     context("/") {
         get(".*") {
             val helper = StreamHelper(this)
             try {
-                val ctx = threadCtxMap[Thread.currentThread().id]
-                    ?: ctx().also { threadCtxMap[Thread.currentThread().id] = it }
-
                 val time = measureTimeMillis {
-                    ctx.eval("js", "ssr").execute(
-                        this@get.path,
-                        "/assets/$indexJSBundle",
-                        helper,
-                    )
+                    synchronized(ctx) {
+                        ctx.eval("js", "ssr").execute(
+                            this@get.path,
+                            "/assets/$indexJSBundle",
+                            helper,
+                        )
+                    }
                 }
 
                 if (Config.isDev) {
