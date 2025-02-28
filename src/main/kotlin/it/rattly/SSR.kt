@@ -58,7 +58,7 @@ fun Server.ssr() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 (helper.stream ?: startResponse(StatusCode.InternalServerError)).write(
-                    """
+                    @Language("HTML") """
                     <html>
                         <head>
                             <title>500 Internal Server Error</title>

@@ -29,6 +29,7 @@ dependencies {
 
     implementation("com.github.kittinunf.fuel:fuel:3.0.0-alpha04")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("com.sksamuel.aedile:aedile-core:2.0.3")
 
     listOf("server", "jackson", "openapi").forEach {
         implementation("com.github.codeborne.klite:klite-$it:+")
