@@ -2,15 +2,23 @@ import {ReactNode} from "react";
 import src from '@/index.css?inline'
 
 export function Index({children}: { children: ReactNode }) {
-    return <html lang={"en"} className={"dark"}>
+    return <html lang={"it"} className={"dark"}>
     <head>
         <meta name="theme_color" content="#11151c"/>
         <meta charSet="UTF-8"/>
         <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="author" content="Giovanni Mazzone"/>
-        <meta name="keywords" content="poliba, orari, politecnico, bari, università, universita, university, timetable, schedule"/>
+        <meta name="keywords"
+              content="poliba, orari, politecnico, bari, università, universita, university, timetable, schedule"/>
         <meta name="description" content="Orari del Politecnico di Bari AA 2024/25"/>
+        <meta name="robots" content="index, follow"/>
+
+        <meta property="og:title" content="Orari PoliBA 2024/25"/>
+        <meta property="og:description" content="Orari del Politecnico di Bari AA 2024/25"/>
+        <meta property="og:image" content="https://www.poliba.it/sites/default/files/poliba.png"/>
+
         <title>PoliBA Orari</title>
         <link rel="manifest" href="/assets/manifest.webmanifest"/>
         <script async src="https://cdn.jsdelivr.net/npm/pwacompat" crossOrigin="anonymous"></script>
