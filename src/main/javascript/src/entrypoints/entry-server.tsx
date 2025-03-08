@@ -44,7 +44,7 @@ export async function ssr(
 
     await stream.pipeTo(new WritableStream<any>({
         write(chunk) {
-            obj.stream().write(chunk)
+            obj.write(chunk)
         },
 
         abort(error) {

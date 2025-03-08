@@ -1,12 +1,12 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import viteCompression from 'vite-plugin-compression';
 import * as path from "node:path";
-import type { UserConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
+import type {UserConfig} from 'vite'
 
-export default defineConfig(({command}) => {
+export default defineConfig(({command, isSsrBuild}) => {
     let config = {
-        plugins: [react(), VitePWA({ registerType: 'autoUpdate' })],
+        plugins: [react(), viteCompression()],
         ssr: {
             noExternal: true,
             target: 'webworker'
@@ -22,6 +22,10 @@ export default defineConfig(({command}) => {
             rollupOptions: {
                 input: {
                     index: path.resolve('./src/entrypoints/entry-client.tsx'),
+                },
+
+                output: {
+                    manualChunks: {libs: ["framer-motion", "react", "react-dom"]}
                 }
             }
         }
@@ -30,6 +34,11 @@ export default defineConfig(({command}) => {
     if (command == "serve") {
         //@ts-ignore
         delete config.ssr
+    }
+
+    if (isSsrBuild) {
+        //@ts-ignore
+        delete config.build.rollupOptions.output.manualChunks
     }
 
     return config
