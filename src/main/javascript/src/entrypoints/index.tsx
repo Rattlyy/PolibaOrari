@@ -22,6 +22,7 @@ export function Index({children}: { children: ReactNode }) {
         <title>PoliBA Orari</title>
         <link rel="manifest" href="/assets/manifest.webmanifest"/>
         <script async src="https://cdn.jsdelivr.net/npm/pwacompat" crossOrigin="anonymous"></script>
+        <script async src="https://cdn.jsdelivr.net/npm/@khmyznikov/pwa-install/dist/pwa-install.bundle.js" type={"module"} crossOrigin="anonymous"></script>
         <script defer data-domain="orari.gmmz.dev" src="https://plausible.gmmz.dev/js/script.js"></script>
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"/>
@@ -33,6 +34,9 @@ export function Index({children}: { children: ReactNode }) {
     <div id="root">
         {children}
     </div>
+
+    {/* @ts-ignore */}
+    <pwa-install manifest-url="/assets/manifest.webmanifest"></pwa-install>
     </body>
     </html>
 }

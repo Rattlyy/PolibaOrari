@@ -110,7 +110,7 @@ export default function Calendar() {
                                         <LessonItem key={lesson.materia} lesson={lesson}/>
                                         {i === length - 1 ?
                                             <div className={"flex items-center "}>
-                                                <h2 className="text-lg font-bold">{lesson.orarioFine + 1}:{lesson.minuteInizio < 10 ? "0" + lesson.minuteInizio : lesson.minuteInizio}</h2>
+                                                <h2 className="text-lg font-bold">{lesson.orarioFine + 1}:{lesson.minuteFine < 10 ? "0" + lesson.minuteFine : lesson.minuteFine}</h2>
                                                 <hr className={"w-full bg-border ml-4"}/>
                                             </div>
                                             : <></>}

@@ -3,8 +3,8 @@
   "short_name": "Orari PoliBA",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "lang": "en",
+  "background_color": "#11151c",
+  "lang": "it",
   "scope": "/",
   "theme_color": "#11151c",
   "icons": [
@@ -18,5 +18,10 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "id": "polibaorari",
+  "description": "Orari delle lezioni del Politecnico di Bari AA 2024/25",
+  "categories": [
+    "education"
   ]
 }

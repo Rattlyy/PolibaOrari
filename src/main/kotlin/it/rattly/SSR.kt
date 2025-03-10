@@ -3,6 +3,7 @@ package it.rattly
 import klite.AssetsHandler
 import klite.Config
 import klite.HttpExchange
+import klite.MimeTypes
 import klite.Server
 import klite.StatusCode
 import klite.isDev
@@ -75,6 +76,7 @@ fun Server.ssr() {
             }
         }
 
+        MimeTypes.byExtension.put("webmanifest", "application/manifest+json")
         assets(
             "/assets",
             AssetsHandler(Path.of(if (Config.isDev) "./src/main/javascript/dist/client" else "/web/client"))
@@ -138,4 +140,5 @@ val polyfills =
         function fetch(resource) {}
         function setTimeout(callback,delay) {}
         function queueMicrotask(callback) {}
+
         """.trimIndent()

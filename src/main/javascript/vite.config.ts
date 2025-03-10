@@ -26,7 +26,9 @@ export default defineConfig(({command, isSsrBuild}) => {
 
                 output: {
                     manualChunks: {libs: ["framer-motion", "react", "react-dom"]}
-                }
+                },
+
+                external: [] as string[]
             }
         }
     } satisfies UserConfig
@@ -39,6 +41,10 @@ export default defineConfig(({command, isSsrBuild}) => {
     if (isSsrBuild) {
         //@ts-ignore
         delete config.build.rollupOptions.output.manualChunks
+
+        config.build.rollupOptions.external = [
+            "src/components/pwa-install.tsx",
+        ]
     }
 
     return config
