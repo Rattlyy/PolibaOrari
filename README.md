@@ -1,8 +1,9 @@
-# GraalJS & React SSR Template
-
-Extracted the work I did for https://flights.gmmz.dev/ into a well-coded template for general use.
-
-Comes with shadcn-ui & react-router preinstalled with my website's colour scheme.
-
-Learn more: https://gmmz.dev/blog/graaljs-and-react-ssr/
 # PolibaOrari
+
+Little PWA to display the timetable of the Polytechnic University of Bari in a more user-friendly UI.
+
+# Stack
+- Frontend: React, shadcn-ui, Tanstack Query, React Router, zod.
+- Backend: Kotlin with klite, GraalJS for SSR, fuel & kotlinx-serialization for scraping Cineca's backend.
+
+You can find a basic template on [graaljs-react-ssr-template](https://github.com/Rattlyy/graaljs-react-ssr-template).
