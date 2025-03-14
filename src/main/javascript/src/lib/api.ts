@@ -7,9 +7,9 @@ const corsiSchema = z.array(
         anno: z.number(),
     })
 )
-
+export const url = (import.meta.env.PROD ? "" : "http://localhost:8080")
 export async function corsi() {
-    return fetch((import.meta.env.PROD ? "" : "http://localhost:8080") + "/api/corsi")
+    return fetch(url + "/api/corsi")
         .then((res) => res.json()).then((data) => corsiSchema.parseAsync(data))
 }
 
@@ -37,6 +37,6 @@ export async function calendario(id: string, annoCorso: number) {
         return []
     }
 
-    return fetch((import.meta.env.DEV ? "http://localhost:8080" : "") + "/api/calendario/" + id + "/" + annoCorso)
+    return fetch(url + "/api/calendario/" + id + "/" + annoCorso)
         .then((res) => res.json()).then((data: []) => lezioniSchema.parseAsync(data))
 }

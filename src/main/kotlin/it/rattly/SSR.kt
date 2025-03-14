@@ -76,7 +76,7 @@ fun Server.ssr() {
             }
         }
 
-        MimeTypes.byExtension.put("webmanifest", "application/manifest+json")
+        MimeTypes.byExtension.put("webmanifest", "application/manifest+json") //TODO: klite merges pr
         assets(
             "/assets",
             AssetsHandler(Path.of(if (Config.isDev) "./src/main/javascript/dist/client" else "/web/client"))

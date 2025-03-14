@@ -3,7 +3,7 @@ import {motion, AnimatePresence} from "framer-motion"
 import {Button} from "@/components/ui/button"
 import LessonItem from "./LessonItem"
 import {useQuery} from "@tanstack/react-query";
-import {corsi as corsiFn} from "@/lib/api";
+import {corsi as corsiFn, url} from "@/lib/api";
 import {calendario as lezioniFn} from "@/lib/api";
 import {toast} from "sonner"
 import {
@@ -13,8 +13,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {CalendarIcon} from "lucide-react";
+import {useIsMobile} from "@/hooks/use-mobile.tsx";
 
 const daysOfWeek = ["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi"]
+
+function SaveToCalendario({selectedCorso}: { selectedCorso: string }) {
+    return <a
+        href={url + "/api/ics/" + selectedCorso.split("///")[0] + "/" + parseInt(selectedCorso.split("///")[1])}><Button
+        className="border-white border-2"><CalendarIcon/> Esporta</Button></a>
+}
 
 export default function Calendar() {
     const [selectedCorso, setSelectedCorso] = useState("")
@@ -43,6 +51,8 @@ export default function Calendar() {
         }
     }, []);
 
+    const isMobile = useIsMobile()
+
     useEffect(() => {
         if (isLezioniError)
             toast("Errore caricamento lezioni", {description: () => lezioniError?.message})
@@ -60,6 +70,7 @@ export default function Calendar() {
                     <img src={"https://www.poliba.it/sites/default/files/poliba.png"} width={60} height={60}
                          className={"animate-spin"} alt={"logo"}></img>
                     <div className="flex space-x-2">
+                        {selectedCorso && !isMobile ? <SaveToCalendario selectedCorso={selectedCorso}/> : null}
                         {daysOfWeek.map((day) => (
                             <Button
                                 key={day}
@@ -121,8 +132,11 @@ export default function Calendar() {
                 <div className={"m-5"}></div>
             </div>
 
-            <footer className="bg-primary text-primary-foreground p-4 w-full text-center fixed bottom-0 rounded-t-lg">
-                Made with ❤️ by <a className={"text-blue-200"} href={"https://gmmz.dev"}>gmmz.dev</a>
+            <footer className="bg-primary text-primary-foreground p-4 w-full text-center fixed bottom-0 rounded-t-lg flex gap-2 items-center">
+                {/*if mobile, material-ui stile ball action button in bottom right of the page*/}
+                {isMobile ?
+                    <SaveToCalendario selectedCorso={selectedCorso}/> : null}
+                <div className={"pl-4"}> Made with ❤️ by <a className={" text-blue-200"} href={"https://gmmz.dev"}>gmmz.dev</a> </div>
             </footer>
         </div>
     )
