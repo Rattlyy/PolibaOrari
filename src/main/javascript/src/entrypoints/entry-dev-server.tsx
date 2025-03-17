@@ -7,7 +7,7 @@ import {StaticRouter} from "react-router";
 export function render(path: string, options?: RenderToPipeableStreamOptions) {
     return renderToPipeableStream(
         <StrictMode>
-            <Index>
+            <Index aa={"2024/25"}>
                 <Providers>
                     <StaticRouter location={path}>
                         <Routing/>

@@ -1,12 +1,6 @@
 package it.rattly
 
-import klite.AssetsHandler
-import klite.Config
-import klite.HttpExchange
-import klite.MimeTypes
-import klite.Server
-import klite.StatusCode
-import klite.isDev
+import klite.*
 import org.graalvm.polyglot.Context
 import org.intellij.lang.annotations.Language
 import java.io.File
@@ -14,7 +8,7 @@ import java.io.OutputStream
 import java.nio.file.Path
 import kotlin.system.measureTimeMillis
 
-fun Server.ssr() {
+fun Server.ssr(aa: String) {
     val indexJSBundle =
         File(if (Config.isDev) "src/main/javascript/dist/client/assets" else "/web/client/assets").list()
             .first { it.startsWith("index") && it.endsWith("js") }
@@ -41,7 +35,7 @@ fun Server.ssr() {
 
     context("/") {
         get(".*") {
-            val helper = StreamHelper(this)
+            val helper = StreamHelper(this, aa)
             try {
                 val time = measureTimeMillis {
                     synchronized(ctx) {
@@ -84,10 +78,12 @@ fun Server.ssr() {
     }
 }
 
-class StreamHelper(val req: HttpExchange) {
+@Suppress("unused")
+class StreamHelper(val req: HttpExchange, val aa: String) {
     // Hack so GraalJS doesn't just make stream null
     var stream: OutputStream? = null
     fun stream() = stream
+    fun aa() = aa
 
     fun write(int: Int) {
         stream?.write(int)

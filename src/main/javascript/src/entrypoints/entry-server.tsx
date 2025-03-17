@@ -15,7 +15,7 @@ export async function ssr(
     let toThrow = null
     const stream = await renderToReadableStream(
         <StrictMode>
-            <Index>
+            <Index aa={obj.aa()}>
                 <Providers>
                     <StaticRouter location={path}>
                         <Routing/>
