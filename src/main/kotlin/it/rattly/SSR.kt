@@ -38,6 +38,8 @@ fun Server.ssr(aa: String) {
             val helper = StreamHelper(this, aa)
             try {
                 val time = measureTimeMillis {
+                    //TODO: Monkey patch; if this needs to run in a serious context (not a 4€ VPS from Hetzner) then
+                    //TODO: create a context pool, instantiating N contextes for N threads and using them in a round-robin fashion
                     synchronized(ctx) {
                         ctx.eval("js", "ssr").execute(
                             this@get.path,

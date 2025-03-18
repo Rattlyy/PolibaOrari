@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-data class CorsiItem(
+data class CorsoJsonEntry(
     @SerialName("id")
     var id: String? = null,
     @SerialName("payload")

@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-data class CalendarioItem(
+data class CalendarioJsonEntry(
     @SerialName("annoCorso")
     var annoCorso: Double? = null,
     @SerialName("attivo")
