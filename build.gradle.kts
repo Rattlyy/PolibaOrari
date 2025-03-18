@@ -22,16 +22,11 @@ dependencies {
         implementation("org.graalvm.polyglot:$it:24.1.2")
     }
 
-//    listOf("javet", "javet-node-linux-x86_64").forEach {
-//        implementation("com.caoccao.javet:$it:4.1.1")
-//    }
-
-    implementation("org.mnode.ical4j:ical4j:4.1.1")
     implementation("com.github.kittinunf.fuel:fuel:3.0.0-alpha04")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
     implementation("com.sksamuel.aedile:aedile-core:2.0.3")
 
-    listOf("server", "jackson", "openapi").forEach {
+    listOf("server", "jackson").forEach {
         implementation("com.github.codeborne.klite:klite-$it:+")
     }
 }

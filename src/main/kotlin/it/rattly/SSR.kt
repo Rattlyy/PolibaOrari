@@ -16,6 +16,7 @@ fun Server.ssr(aa: String) {
     val ctx: Context = Context.newBuilder()
         .option("js.esm-eval-returns-exports", "true")
         .option("js.commonjs-require", "true")
+        .option("js.text-encoding", "true")
         .option(
             "js.commonjs-require-cwd",
             Path.of("${if (Config.isDev) "src/main/resources/packages/" else "/web/"}node_modules").toAbsolutePath()
@@ -114,8 +115,6 @@ val polyfills =
             }
         }
         
-        var TextEncoder = require("text-encoding").TextEncoder
-        var TextDecoder = require("text-encoding").TextDecoder
         var ReadableStream = require("web-streams-polyfill").ReadableStream;
         var WritableStream = require("web-streams-polyfill").WritableStream;
         var Buffer = require('buffer/').Buffer
